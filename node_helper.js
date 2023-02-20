@@ -26,7 +26,10 @@ const months = [
 ];
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const today_ = new Date();
+
+// For demo or dwbugging, the data can be shifted to see agenda of different dates
 const today = new Date(today_.getTime() + 2 * (24 * 60 * 60 * 1000));
+
 const ical = require("node-ical");
 const calendarLink =
   "https://sisu.helsinki.fi:443/ilmo/api/calendar-share/74e0b648-8278-413a-825f-16d5bad8250c";

@@ -1,8 +1,9 @@
-# personal-content-01
+# MMM-personal-agenda
 
-This is a module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/).
+This is a demo module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/).
 
-Todo: Insert description here!
+Todo:
+ - Configure the authtication API to receive the recognized person
 
 ## Using the module
 
@@ -11,18 +12,19 @@ To use this module, add the following configuration block to the modules array i
 var config = {
     modules: [
         {
-            module: 'personal-content-01',
-            config: {
-                // See below for configurable options
-            }
+            module: 'personal_agenda',
+            position: "top_right",
+			header: "Agenda Today"
         }
     ]
 }
 ```
+In the current stage, the module will try to fetch a curriculum exported as `.ical`, and displays the class name, time, and position (if it exists) of today.  
 
-## Configuration options
+Now the authentication API is mocked as returning a random firstname as ID, which is supposed to be an integer. 
 
-| Option           | Description
-|----------------- |-----------
-| `option1`        | *Required* DESCRIPTION HERE
-| `option2`        | *Optional* DESCRIPTION HERE TOO <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute)
+For demonstration purpose, the agenda API (i.e., the `.ical` link) is now hard-coded, which means it returns the same content for all users. For the same reason this repo is only available for internal users.
+
+**An example of the output is shown below:**
+<!-- image example -->
+![Drag Racing](demo.png)
