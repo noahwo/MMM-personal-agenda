@@ -1,0 +1,23 @@
+<!--
+	Use ` | safe` to allow html tages within the text string.
+	https://mozilla.github.io/nunjucks/templating.html#autoescaping
+-->
+<style>
+  .line-height {
+    line-height: 0.7;
+  }
+ 
+</style>
+
+<div>{{personId}}, <span>you have following items on today's agenda:</span><br />
+
+<ul>
+  {% for event in agendaEvs %}
+      <p class="line-height"><strong>{{ event.cname }}</strong></p>
+	  {% if event.location %}
+      <p class="line-height"><strong>Location:</strong> {{ event.location }}</p>
+	  {% endif %}
+      <p class="line-height"><strong>Time:</strong> {{ event.time }}</p>
+	  
+  {% endfor %}
+</ul></div>
