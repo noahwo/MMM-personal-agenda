@@ -14,7 +14,7 @@ var config = {
         {
             module: 'personal_agenda',
             position: "top_right",
-            sheader: "Agenda Today"
+            header: "Agenda Today"
         }
     ]
 }
