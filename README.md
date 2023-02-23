@@ -1,5 +1,7 @@
 # MMM-personal-agenda
 
+[toc]
+
 This is a demo module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/). It displays the agenda events of today of the user who is recognized by the face recognition module.
 
 To-do:
