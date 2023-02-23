@@ -1,4 +1,12 @@
 <!--
+
+MagicMirror²
+Node Helper: personal_agenda
+By noahwo
+MIT Licensed.
+
+-->
+<!--
 	Use ` | safe` to allow html tages within the text string.
 	https://mozilla.github.io/nunjucks/templating.html#autoescaping
 -->
@@ -8,8 +16,12 @@
   }
  
 </style>
+<div>
 
-<div>{{personId}}, <span>you have following items on today's agenda:</span><br />
+
+{% if personId %}
+
+{{personId}}, <span>you have following items on today's agenda:</span><br />
 
 <ul>
   {% for event in agendaEvs %}
@@ -20,4 +32,8 @@
       <p class="line-height"><strong>Time:</strong> {{ event.time }}</p>
 	  
   {% endfor %}
-</ul></div>
+</ul>
+ {% else %}
+    <span>Please log in to see personal agenda.</span>
+{% endif %}  
+</div>

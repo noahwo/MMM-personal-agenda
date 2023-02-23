@@ -1,15 +1,15 @@
 /* MagicMirror²
- * Node Helper: Personal Agenda
+ * Node Helper: personal_agenda
  *
- * By Guanghan Wu and Kalle Paananen
+ * By noahwo
  * MIT Licensed.
  */
 
 // The file helps the module to fetch recognized person and sends back to personal_agenda.js
-
-const NodeHelper = require("node_helper");
 const Log = require("logger");
-const fetch = require("node-fetch");
+const ical = require("node-ical");
+const NodeHelper = require("node_helper");
+
 const months = [
   "Jan",
   "Feb",
@@ -24,15 +24,12 @@ const months = [
   "Nov",
   "Dec"
 ];
-const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const today_ = new Date();
-
-// For demo or dwbugging, the data can be shifted to see agenda of different dates
-const today = new Date(today_.getTime() + 2 * (24 * 60 * 60 * 1000));
-
-const ical = require("node-ical");
+const namelist = ["User1", "User2", "User3", "User4"]; // hard-coded name list for demo
+const today = new Date(today_.getTime() + 0 * (24 * 60 * 60 * 1000)); // For demo or debugging, the date can be shifted to see agenda of different dates
 const calendarLink =
-  "https://sisu.helsinki.fi:443/ilmo/api/calendar-share/74e0b648-8278-413a-825f-16d5bad8250c";
+  "https://ac7ad1dc-4af3-4a8c-b0b0-34ddc090803c.mock.pstmn.io";
 
 module.exports = NodeHelper.create({
   _self: null,
@@ -45,62 +42,9 @@ module.exports = NodeHelper.create({
   //  notification received from personal_agenda.js
   socketNotificationReceived: function (notification, payload) {
     switch (notification) {
-      case "PERSONAL_AGENDA.INIT":
-        _self.url = payload.url;
-        _self._fetchData();
-        setTimeout(function () {
-          _self._fetchData();
-        }, 1000 * 60);
-        break;
-      case "PERSONAL_AGENDA.PERSON_DETECTED":
-        clearTimeout();
-        _self._person_id = payload.personId;
-        _self._fetchData();
-        setTimeout(function () {
-          //   to fetch data
-          _self._fetchData();
-        }, 1000 * 60);
-        break;
-      case "PERSONAL_AGENDA.PERSON_DISMISSED":
-        clearTimeout();
-        _self._person_id = payload.personId;
-        _self._fetchData();
-        setTimeout(function () {
-          _self._fetchData();
-        }, 1000 * 60);
-        break;
       case "PERSONAL_AGENDA.GETCAL":
         _self._getCalendar(payload.personId);
     }
-  },
-
-  // _fetchData() {
-  //   _self._fetchData();
-  // },
-
-  _fetchData() {
-    var options = { method: "GET" };
-    var url = _self._person_id
-      ? _self.url + "?person_id=" + _self.person_id
-      : _self.url;
-
-    //	start to fetch and wait for data
-    fetch(url, options)
-      .then((resp) => resp.json())
-      .then((json) => _self._onPersonalAgendaReceived(json))
-      .catch((error) => Log.log(error));
-  },
-
-  // process the fetched recgonition data from API
-  _onPersonalAgendaReceived(resp) {
-    const params = resp;
-    Log.log("ID: " + params.person_id + " TITLE: " + params.title);
-    const payload = {
-      personId: params.person_id,
-      title: params.title
-    };
-    // publish event to inform that data is received, and sends back the data to personal_agenda.js
-    _self.sendSocketNotification("PERSONAL_AGENDA.DATA_RECEIVED", payload);
   },
 
   _getCalendar(personId) {
@@ -122,7 +66,7 @@ module.exports = NodeHelper.create({
         }
       }
       _self.sendSocketNotification("PERSONAL_AGENDA.AGENDA_RECEIVED", {
-        personId: personId,
+        personId: `${namelist[personId - 1]}`,
         agendaEvs: agenda
       });
       Log.log({ personId: personId, agendaEvs: agenda });
@@ -152,14 +96,20 @@ module.exports = NodeHelper.create({
       };
     }
   },
+
+  // parse date to a string, used to compare if the event is today
   _parseDate(date) {
     return `${weekdays[date.getDay()]} ${date.getDate()} ${
       months[date.getMonth()]
     }, ${1900 + date.getYear()}`;
   },
+
+  // parse time to a string, used to display on the screen
   _parseTime(time) {
     return time.toLocaleTimeString("en-GB").replace(/:(00)$/, "");
   },
+
+  // parse location to a string, used to display on the screen
   _parseLocation(location) {
     if (location === undefined) {
       return "";
@@ -167,6 +117,8 @@ module.exports = NodeHelper.create({
       return location.split(",")[1].trim();
     }
   },
+
+  // parse course name to a string, used to display on the screen
   _parseCourseName(str) {
     return (
       str.split(",")[0] +

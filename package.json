@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Todo: Insert description here!",
   "main": "personal_agenda.js",
-  "author": "hann-mbp14",
+  "author": "noahwo",
   "license": "MIT",
   "devDependencies": {
     "grunt": "latest",

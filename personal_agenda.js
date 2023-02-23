@@ -1,22 +1,17 @@
 /* MagicMirror²
- * Module: Personal Agenda
+ * Module: personal_agenda
  *
- * By Guanghan Wu and Kalle Paananen
+ * By noahwo and Kalle Paananen
  * MIT Licensed.
  */
 
 Module.register("personal_agenda", {
-  defaults: {
-    // publisher of detected person
-    publisher: "https://3fa63cf9-c25c-4bea-ad55-3a8b87658c97.mock.pstmn.io"
-  },
+  defaults: {},
   start() {
     this.viewModel = {
-      personId: "...",
-      agendaEvs: "loading..."
+      personId: null,
+      agendaEvs: null
     };
-    //   sends initialization notification to node_helper.js
-    this._initCommunication();
   },
   //   specifies template file
   getTemplate: function () {
@@ -27,42 +22,28 @@ Module.register("personal_agenda", {
   getTemplateData: function () {
     return this.viewModel;
   },
-  
-  //  auto invocation
-  // wait is this funtion really useful?
-  notificationReceived(notification, payload, sender) {
+
+  //   notificationReceived from other modules
+  notificationReceived: function (notification, payload) {
     switch (notification) {
-      case "PERSONAL_AGENDA.PERSON_RECOGNIZED":
-        this.sendSocketNotification("PERSONAL_AGENDA.PERSON_DETECTED", {
+      case "PERSON_RECOGNIZED":
+        this.sendSocketNotification("PERSONAL_AGENDA.GETCAL", {
           personId: payload.personId
         });
+        this.updateDom();
         break;
-      case "PERSONAL_AGENDA.PERSON_DISMISSED":
-        this.sendSocketNotification("PERSONAL_AGENDA.PERSON_DISMISSED", {});
+      case "PERSON_DISMISSED":
+        this.updateDom();
         break;
-      default:
-        // do nothing for other cases
+      default: {
         break;
+      }
     }
   },
 
   // socketNotificationReceived from helper
   socketNotificationReceived(notificationName, payload) {
     switch (notificationName) {
-      case "PERSONAL_AGENDA.DATA_RECEIVED":
-        if (payload) {
-          this.viewModel = {
-            personId: payload.personId,
-            agendaEvs: payload.agendaEvs
-          };
-          console.log(this.viewModel);
-          // this.getCalendar();
-          this.sendSocketNotification("PERSONAL_AGENDA.GETCAL", {
-            personId: payload.personId
-          });
-          this.updateDom();
-        }
-        break;
       case "PERSONAL_AGENDA.AGENDA_RECEIVED":
         if (payload) {
           this.viewModel = {
@@ -77,10 +58,5 @@ Module.register("personal_agenda", {
       default:
         break;
     }
-  },
-  _initCommunication() {
-    this.sendSocketNotification("PERSONAL_AGENDA.INIT", {
-      url: this.config.publisher
-    });
   }
 });
