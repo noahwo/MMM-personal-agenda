@@ -1,7 +1,5 @@
 # MMM-personal-agenda
 
-[toc]
-
 This is a demo module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/). It displays the agenda events of today of the user who is recognized by the face recognition module.
 
 To-do:
@@ -9,7 +7,7 @@ To-do:
 - Fetch different agendas for different users
 - Sort the agenda events by time on the interface
 
-### Using the module
+## Using the module
 
 To use this module, add the following configuration block to the modules array in the `config/config.js` file:
 
@@ -25,7 +23,7 @@ var config = {
 }
 ```
 
-### Introduction
+## Introduction
 
 This module is part of a group project in the course Cloud and Edge Computing.
 
@@ -39,7 +37,7 @@ In the current stage, the module will try to fetch a curriculum exported as `.ic
 
 For demonstration purpose, the agenda API (i.e., the `.ical` link) is now hard-coded, which means it returns the same agenda for all users.  
 
-### Quick test
+## Quick test
 To quickly test the module, you can put the following function into the `start()` function in a default module, such as `compliments.js`:
 
 ```js
@@ -53,14 +51,14 @@ setInterval(function () {
 
 This function will send a notification with a random ID from `[1-4]` every 5,000 ms.
 
-### Examples of the output is shown below:
+## Examples of the output is shown below:
 <!-- image example -->
 ![Agenda module demo](demoPNG/modulDemo.png)
 
 The screenshot below shows the interface without a valid ID.
 ![Demo without an ID](demoPNG/NoID.png)
 
-### Contribution
+## Contribution
 
 Some of other parts of the system are shown below:
 - Face recognition component: [Linzh7/FaceRecognition-MagicMirror](https://github.com/Linzh7/FaceRecognition-MagicMirror)
